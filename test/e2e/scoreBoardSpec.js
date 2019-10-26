@@ -4,7 +4,7 @@ describe('/#/score-board', () => {
   describe('challenge "scoreBoard"', () => {
     it('should be possible to access score board', () => {
       browser.get('/#/score-board')
-      expect(browser.getCurrentUrl()).toMatch(/\/score-board/)
+      browser.getCurrentUrl().then((url) => expect(url).toMatch(/\/score-board/))
     })
 
     protractor.expect.challengeSolved({ challenge: 'Score Board' })
@@ -34,7 +34,7 @@ describe('/#/score-board', () => {
 
         alertsNow = element.all(by.className('challenge-solved-toast')).count()
 
-        expect(alertsBefore).not.toBe(alertsNow)
+        expect(alertsBefore).not.toEqual(alertsNow)
       })
     } else {
       it('should not be possible when not in CTF mode', () => {
@@ -44,7 +44,7 @@ describe('/#/score-board', () => {
 
         alertsNow = element.all(by.className('challenge-solved-toast')).count()
 
-        expect(alertsBefore).toBe(alertsNow)
+        expect(alertsBefore).toEqual(alertsNow)
       })
     }
   })

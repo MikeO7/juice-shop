@@ -35,7 +35,7 @@ describe('/#/privacy-security/change-password', () => {
       element(by.id('password')).sendKeys('slurmCl4ssic')
       element(by.id('loginButton')).click()
 
-      expect(browser.getCurrentUrl()).toMatch(/\/search/)
+      browser.getCurrentUrl().then((url) => expect(url).toMatch(/\/search/))
     })
 
     protractor.expect.challengeSolved({ challenge: 'Change Bender\'s Password' })

@@ -88,7 +88,7 @@ describe('/#/complain', () => {
       })
 
       it('should be possible to trigger request timeout via .xml upload with dev/random attack', () => {
-        complaintMessage.sendKeys('XXE Quadratic Blowup!')
+        complaintMessage.sendKeys('XXE DevRandom!')
         file.sendKeys(path.resolve('test/files/xxeDevRandom.xml'))
         submitButton.click()
       })

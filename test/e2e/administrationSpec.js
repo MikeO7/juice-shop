@@ -6,7 +6,7 @@ describe('/#/administration', () => {
 
     it('should be possible to access administration section with admin user', () => {
       browser.get('/#/administration')
-      expect(browser.getCurrentUrl()).toMatch(/\/administration/)
+      browser.getCurrentUrl().then((url) => expect(url).toMatch(/\/administration/))
     })
 
     protractor.expect.challengeSolved({ challenge: 'Admin Section' })

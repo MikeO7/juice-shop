@@ -2,46 +2,38 @@ const otplib = require('otplib')
 
 protractor.expect = {
   challengeSolved: function (context) {
-    describe('(shared)', () => {
-      beforeEach(() => {
-        browser.get('/#/score-board')
-      })
+    it("challenge '" + context.challenge + "' should be solved on score board", () => {
+      browser.get('/#/score-board')
 
-      it("challenge '" + context.challenge + "' should be solved on score board", () => {
-        expect(element(by.id(context.challenge + '.solved')).isPresent()).toBeTruthy()
-        expect(element(by.id(context.challenge + '.notSolved')).isPresent()).toBeFalsy()
-      })
+      expectAsync(element(by.id(context.challenge + '.solved')).isPresent()).toBeResolvedTo(true)
+      expectAsync(element(by.id(context.challenge + '.notSolved')).isPresent()).toBeResolvedTo(false)
     })
   }
 }
 
 protractor.beforeEach = {
   login: function (context) {
-    describe('(shared)', () => {
-      beforeEach(() => {
-        browser.get('/#/login')
+    it('should have logged in user "' + context.email + '" with password "' + context.password + '"', () => {
+      browser.get('/#/login')
 
-        element(by.id('email')).sendKeys(context.email)
-        element(by.id('password')).sendKeys(context.password)
-        element(by.id('loginButton')).click()
+      element(by.id('email')).sendKeys(context.email)
+      element(by.id('password')).sendKeys(context.password)
+      element(by.id('loginButton')).click()
 
-        if (context.totpSecret) {
-          const EC = protractor.ExpectedConditions
-          const twoFactorTokenInput = element(by.id('totpToken'))
-          const twoFactorSubmitButton = element(by.id('totpSubmitButton'))
+      if (context.totpSecret) {
+        const EC = protractor.ExpectedConditions
+        const twoFactorTokenInput = element(by.id('totpToken'))
+        const twoFactorSubmitButton = element(by.id('totpSubmitButton'))
 
-          browser.wait(EC.visibilityOf(twoFactorTokenInput), 1000, '2FA token field did not become visible')
+        browser.wait(EC.visibilityOf(twoFactorTokenInput), 1000, '2FA token field did not become visible')
 
-          const totpToken = otplib.authenticator.generate(context.totpSecret)
-          twoFactorTokenInput.sendKeys(totpToken)
+        const totpToken = otplib.authenticator.generate(context.totpSecret)
+        twoFactorTokenInput.sendKeys(totpToken)
 
-          twoFactorSubmitButton.click()
-        }
-      })
+        twoFactorSubmitButton.click()
+      }
 
-      it('should have logged in user "' + context.email + '" with password "' + context.password + '"', () => {
-        expect(browser.getCurrentUrl()).toMatch(/\/search/) // TODO Instead check for uib-tooltip of <i> with fa-user-circle
-      })
+      browser.getCurrentUrl().then((url) => expect(url).toMatch(/\/search/)) // TODO Instead check for uib-tooltip of <i> with fa-user-circle
     })
   }
 }
